@@ -32,8 +32,8 @@ MPREMOTE = mpremote
 FLASH_SCRIPT = flash_bin.py
 
 # Firmware files
-MICROPYTHON_UF2 = pico-ice_micropython_float_frequencies.uf2
-LOGICANALYZER_UF2 = LogicAnalyzer.uf2
+MICROPYTHON_UF2 = firmware/pico-ice_micropython_float_frequencies.uf2
+LOGICANALYZER_UF2 = firmware/LogicAnalyzer.uf2
 REBOOT_BOOTSEL = ./reboot_bootsel.sh
 FLASH_FIRMWARE = ./flash.sh
 

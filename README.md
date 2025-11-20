@@ -66,8 +66,25 @@ sudo apt-get install verilator libglu1-mesa-dev freeglut3-dev
 ├── reboot_bootsel.sh     # Automatic BOOTSEL entry (no button!)
 ├── flash.sh              # Firmware management script
 ├── Makefile              # Build automation
-└── pins.pcf              # Pin constraints for pico2-ice
+├── pins.pcf              # Pin constraints for pico2-ice
+└── firmware/             # Pre-built firmware files
+    ├── pico-ice_micropython_float_frequencies.uf2
+    └── LogicAnalyzer.uf2
 ```
+
+### Firmware Files
+
+The `firmware/` directory contains pre-built firmware files:
+
+- **`pico-ice_micropython_float_frequencies.uf2`** - MicroPython firmware for FPGA programming
+  - Source: [tinyvision-ai-inc/pico-ice-micropython](https://github.com/tinyvision-ai-inc/pico-ice-micropython)
+  - Used for flashing FPGA bitstreams via `mpremote`
+
+- **`LogicAnalyzer.uf2`** - Logic analyzer firmware for waveform capture
+  - Source: [gusmanb/logicanalyzer](https://github.com/gusmanb/logicanalyzer)
+  - Used with LogicAnalyzer desktop software for debugging
+
+**To update firmware files:** Download latest releases from the source repositories and replace the files in `firmware/`.
 
 ## 🎮 Game Specifications
 
@@ -234,3 +251,5 @@ Educational project for digital design coursework.
 
 - Original VGA simulation framework by [Saman Mohseni](https://github.com/SamanMohseni)
 - Built with OSS CAD Suite and Yosys toolchain
+- MicroPython firmware from [pico-ice-micropython](https://github.com/tinyvision-ai-inc/pico-ice-micropython)
+- LogicAnalyzer firmware from [logicanalyzer](https://github.com/gusmanb/logicanalyzer)
