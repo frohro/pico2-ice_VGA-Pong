@@ -1,162 +1,236 @@
---# VGA Display System for pico2-ice
+--# Pico2-Ice VGA Pong 🎮
 
-This project implements a VGA 640x480@60Hz display controller for the pico2-ice FPGA board (ICE40UP5K). The system displays a full-screen red color as a starting point for further VGA applications.
+FPGA-based Pong game for the pico2-ice board (ICE40UP5K) with 640x480@60Hz VGA output. Features sprite-based rendering, realistic physics, paddle AI, and automatic firmware management.
 
-## Features
+![VGA Output](https://img.shields.io/badge/VGA-640x480@60Hz-blue)
+![FPGA](https://img.shields.io/badge/FPGA-iCE40UP5K-green)
+![License](https://img.shields.io/badge/license-Educational-orange)
 
-- **VGA Timing Generator**: Generates proper sync signals for 640x480@60Hz resolution
-- **4-bit Color Channels**: Supports 4 bits per RGB channel (4096 colors total)
-- **R-2R DAC Compatible**: Designed to work with Digilent R-2R DAC for analog output
-- **Modern SystemVerilog**: Uses best practices and latest coding standards
+## ✨ Features
 
-## Hardware Requirements
+- 🎮 **Classic Pong Gameplay** - Ball physics with elastic collisions and paddle AI
+- 🎨 **Sprite-Based Rendering** - 16×16 white ball, 8×64 yellow paddle on red background
+- ⚡ **Configurable Speed** - Easy parameters: 400 px/s horizontal, 200 px/s vertical
+- 🔄 **Automatic Firmware Management** - Seamless switching between MicroPython and LogicAnalyzer
+- 🖥️ **Visual Simulator** - Real-time OpenGL simulator using Verilator (8x speed boost)
+- 📊 **Comprehensive Testing** - Full testbench suite with Icarus Verilog
+- 🔍 **Debug-Friendly** - Probe points for oscilloscope access without cable juggling
+- 🚀 **No BOOTSEL Button** - Automatic firmware loading, no manual rebooting
 
-- **pico2-ice board** with ICE40UP5K FPGA
-- **RP2350B** provides clock to FPGA (configured via MicroPython)
-- **Digilent VGA PMOD** with R-2R DAC or equivalent
-- **VGA Monitor** supporting 640x480@60Hz
+## 🎯 Quick Start
 
-## VGA Timing Specifications
-
-Based on specifications from [http://javiervalcarce.eu/html/vga-signal-format-timming-specs-en.html](http://javiervalcarce.eu/html/vga-signal-format-timming-specs-en.html)
-
-### Horizontal Timing (640x480@60Hz)
-- Pixel clock: 25.175 MHz
-- Visible area: 640 pixels
-- Front porch: 16 pixels
-- Sync pulse: 96 pixels (negative polarity)
-- Back porch: 48 pixels
-- Total: 800 pixels per line
-- Line frequency: 31.469 kHz
-
-### Vertical Timing
-- Visible area: 480 lines
-- Front porch: 10 lines
-- Sync pulse: 2 lines (negative polarity)
-- Back porch: 33 lines
-- Total: 525 lines per frame
-- Frame frequency: 59.94 Hz
-
-## File Structure
-
-```
-.
-├── README.md           # This file
-├── Makefile           # Build automation
-├── flash_bin.py       # FPGA flash script for pico2-ice
-├── pins.pcf           # Pin constraints (needs pinout update)
-├── top.sv             # Top-level module
-├── vga_timing.sv      # VGA timing generator
-└── vga_tb.sv          # Testbench for verification
-```
-
-## Pin Configuration
-
-**IMPORTANT**: The `pins.pcf` file contains placeholder pin numbers. You must update it with the actual pico2-ice pinout for your VGA connection.
-
-Required signals:
-- `clk_25mhz`: 25.175 MHz clock input from RP2350B
-- `reset_n`: Active-low reset button
-- `vga_r[3:0]`: 4-bit red channel (to R-2R DAC)
-- `vga_g[3:0]`: 4-bit green channel (to R-2R DAC)
-- `vga_b[3:0]`: 4-bit blue channel (to R-2R DAC)
-- `vga_hsync`: Horizontal sync signal
-- `vga_vsync`: Vertical sync signal
-
-## Building the Project
-
-### Prerequisites
-
-Install the OSS CAD Suite:
 ```bash
-# OSS CAD Suite includes yosys, nextpnr-ice40, icepack, etc.
-# Download from: https://github.com/YosysHQ/oss-cad-suite-build
+# Flash FPGA and keep MicroPython for quick iteration
+make flash
+
+# Flash FPGA and switch to LogicAnalyzer for waveform capture
+make flash-logic
+
+# Run visual simulator (8x faster than real-time)
+make run-visual
+
+# Run cycle-accurate testbench
+make sim-pong
 ```
 
-Install mpremote for pico2-ice programming:
+## 📋 Requirements
+
+### Hardware
+- **pico2-ice board** with ICE40UP5K FPGA
+- **VGA monitor** supporting 640x480@60Hz
+- **VGA connection** (R-2R DAC or direct connection)
+- **USB cable** for programming
+
+### Software
+- **OSS CAD Suite** - Yosys, nextpnr-ice40, icepack
+- **Python 3** with `mpremote` for device programming
+- **Verilator** (optional) - For visual simulator
+- **OpenGL/GLUT** (optional) - For visual simulator
+
+Install dependencies on Ubuntu:
 ```bash
 pip install mpremote
+sudo apt-get install verilator libglu1-mesa-dev freeglut3-dev
 ```
 
-### Build Steps
+## 📂 Project Structure
 
-1. **Synthesize and generate bitstream:**
-   ```bash
-   make
-   ```
+```
+├── top.sv                 # Top-level module with probe outputs
+├── vga_timing.sv         # VGA timing generator (640x480@60Hz)
+├── pong_game.sv          # Game physics and paddle AI
+├── sprite_renderer.sv    # Sprite rendering engine
+├── display_pong.v        # Simulation wrapper
+├── pong_simulator.cpp    # Verilator + OpenGL visual simulator
+├── flash_bin.py          # FPGA flash script for MicroPython
+├── reboot_bootsel.sh     # Automatic BOOTSEL entry (no button!)
+├── flash.sh              # Firmware management script
+├── Makefile              # Build automation
+└── pins.pcf              # Pin constraints for pico2-ice
+```
 
-2. **Run simulation (optional):**
-   ```bash
-   make sim
-   ```
+## 🎮 Game Specifications
 
-3. **Flash to FPGA:**
-   ```bash
-   make flash
-   ```
+- **Ball**: 16×16 pixels, white color
+- **Paddle**: 8×64 pixels, yellow color, left edge
+- **Background**: Solid red (4-bit RGB = F00)
+- **Ball Speed**: 400 pixels/sec horizontal, 200 pixels/sec vertical
+- **Paddle Speed**: 200 pixels/sec (matches ball vertical speed)
+- **AI Behavior**: Paddle tracks ball center, smooth speed-limited movement
+- **Physics**: Elastic collisions with walls and paddle
 
-## Usage
+### Adjusting Speed
 
-1. Update `pins.pcf` with correct pin assignments for your hardware
-2. Connect VGA PMOD/R-2R DAC to FPGA pins
-3. Connect VGA monitor
-4. Build and flash the design: `make && make flash`
-5. The RP2350B will provide a 25 MHz clock to the FPGA (via `flash_bin.py`)
-6. The screen should display solid red color
-
-## Modifying Colors
-
-To change the displayed color, edit the `top.sv` file in the color generation section:
-
+Edit `pong_game.sv`:
 ```systemverilog
-if (display_en) begin
-    vga_r <= 4'hF;  // Red intensity (0x0 to 0xF)
-    vga_g <= 4'h0;  // Green intensity (0x0 to 0xF)
-    vga_b <= 4'h0;  // Blue intensity (0x0 to 0xF)
-end
+localparam BALL_SPEED_H = 400;      // Horizontal (pixels/sec)
+localparam BALL_SPEED_V = 200;      // Vertical (pixels/sec)  
+localparam PADDLE_SPEED_VAL = 200;  // Paddle tracking (pixels/sec)
 ```
 
-Examples:
-- White: `vga_r <= 4'hF; vga_g <= 4'hF; vga_b <= 4'hF;`
-- Blue: `vga_r <= 4'h0; vga_g <= 4'h0; vga_b <= 4'hF;`
-- Yellow: `vga_r <= 4'hF; vga_g <= 4'hF; vga_b <= 4'h0;`
-- Gray: `vga_r <= 4'h8; vga_g <= 4'h8; vga_b <= 4'h8;`
+## 🛠️ Building and Flashing
 
-## Next Steps
+### Standard Workflow
 
-This basic red screen is a foundation for more complex VGA applications:
+```bash
+# Build bitstream
+make
 
-1. **Pattern Generation**: Display test patterns, checkerboards, gradients
-2. **Graphics Primitives**: Draw lines, rectangles, circles
-3. **Text Display**: Add character ROM for text rendering
-4. **Frame Buffer**: Implement memory-based frame buffer
-5. **Animation**: Create moving objects or sprites
-6. **Video Input**: Process and display video signals
+# Flash to FPGA (auto-loads MicroPython if needed)
+make flash
+```
 
-## Troubleshooting
+### Development with LogicAnalyzer
+
+```bash
+# Flash FPGA and switch to LogicAnalyzer firmware
+make flash-logic
+
+# Capture waveforms with LogicAnalyzer software
+# When done, reflash normally - MicroPython auto-loads
+make flash
+```
+
+### Pin Assignments
+
+The design includes duplicate sync signal outputs for easy oscilloscope probing:
+
+| Signal | Monitor Pin | Probe Pin | Description |
+|--------|------------|-----------|-------------|
+| `vga_hsync` | 20 | 42 | Horizontal sync (~31.5 kHz) |
+| `vga_vsync` | 27 | 36 | Vertical sync (~60 Hz) |
+| `vga_hsync_probe` | - | 42 | Probe point |
+| `vga_vsync_probe` | - | 36 | Probe point |
+
+## 🖥️ Visual Simulation
+
+Run the Verilator-based visual simulator to see the game without hardware:
+
+```bash
+# Build and run
+make run-visual
+
+# Just build
+make sim-visual
+./obj_dir/Vdisplay_pong
+```
+
+**Note**: Simulator runs 8x faster than real-time by skipping cycles (configurable in `pong_simulator.cpp`).
+
+## 🧪 Testing
+
+### Cycle-Accurate Testbenches
+
+```bash
+make sim-pong    # Test game logic
+make sim-sprite  # Test sprite renderer  
+make sim         # Test VGA timing
+make sim-all     # Run all tests
+```
+
+### View Waveforms
+
+```bash
+make sim-pong
+gtkwave pong_game_tb.vcd
+```
+
+## 🔧 Firmware Management
+
+The build system automatically handles firmware switching:
+
+```bash
+make check-micropython    # Check current firmware
+make ensure-micropython   # Load MicroPython if needed
+make flash               # Auto-switches to MicroPython, flashes FPGA
+make flash-logic         # Flashes FPGA, switches to LogicAnalyzer
+```
+
+**No manual intervention required** - scripts handle BOOTSEL mode entry automatically!
+
+## 📐 VGA Timing
+
+### Specifications (640x480@60Hz)
+
+**Horizontal (31.469 kHz)**
+- Visible: 640 pixels
+- Front porch: 16 pixels
+- Sync: 96 pixels (negative polarity)
+- Back porch: 48 pixels
+- Total: 800 pixels
+
+**Vertical (59.94 Hz)**
+- Visible: 480 lines
+- Front porch: 10 lines
+- Sync: 2 lines (negative polarity)
+- Back porch: 33 lines
+- Total: 525 lines
+
+**Clock**: 25.175 MHz (provided by RP2350B via MicroPython)
+
+## 🐛 Troubleshooting
 
 ### No Display
-- Check VGA cable connections
+- Check VGA cable and monitor input selection
 - Verify monitor supports 640x480@60Hz
-- Confirm 25.175 MHz clock is present at FPGA
-- Check sync signal polarities (should be negative)
+- Run `make flash` to ensure proper programming
 
-### Wrong Colors
-- Verify R-2R DAC connections
-- Check pin assignments in `pins.pcf`
-- Ensure correct bit ordering (MSB to LSB)
+### LogicAnalyzer Not Responding
+- Close Thonny or other tools using the serial port
+- Run `make flash-logic` again
+- Check USB connection
 
-### Unstable Image
-- Verify clock stability
-- Check for timing violations in synthesis report
-- Ensure proper ground connections
+### Build Errors
+- Ensure OSS CAD Suite is in PATH
+- Verify all source files are present
+- Check synthesis output: `make report`
 
-## References
+### Simulation Slow
+- Use `make run-visual` instead of `make sim-pong`
+- Visual simulator runs 8x faster
+- Adjust `CYCLE_SKIP` in `pong_simulator.cpp` for more speed
 
-- [VGA Signal Timing Specifications](http://javiervalcarce.eu/html/vga-signal-format-timming-specs-en.html)
+## 🚀 Future Enhancements
+
+- [ ] Add player-controlled paddle (button input)
+- [ ] Score display with 7-segment style numbers
+- [ ] Sound effects via PWM audio
+- [ ] Multiple difficulty levels
+- [ ] Two-player mode
+- [ ] Menu system
+- [ ] High score tracking
+
+## 📚 References
+
+- [VGA Timing Specifications](http://javiervalcarce.eu/html/vga-signal-format-timming-specs-en.html)
 - [pico2-ice Documentation](https://github.com/tinyvision-ai-inc/pico-ice)
-- [ICE40 FPGA Documentation](https://www.latticesemi.com/iCE40)
+- [ICE40UP5K Datasheet](https://www.latticesemi.com/iCE40)
 
-## License
+## 📄 License
 
-This project is provided as educational material for digital design courses.
+Educational project for digital design coursework.
+
+## 🙏 Acknowledgments
+
+- Original VGA simulation framework by [Saman Mohseni](https://github.com/SamanMohseni)
+- Built with OSS CAD Suite and Yosys toolchain
