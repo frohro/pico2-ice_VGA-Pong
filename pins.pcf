@@ -1,0 +1,44 @@
+# Pin constraints for pico2-ice (ICE40UP5K) VGA project
+# 
+# NOTE: Pin numbers are placeholders and need to be updated
+# with actual pico2-ice pinout for VGA interface
+#
+# The pico2-ice uses the ICE40UP5K in SG48 package
+# Reference: https://github.com/tinyvision-ai-inc/pico-ice
+
+# Clock input from RP2350B (25.175 MHz)
+# TODO: Update with actual clock pin from pico2-ice
+set_io clk_25mhz 35
+
+# Reset button (active low)
+# TODO: Update with actual reset button pin
+set_io reset_n 10
+
+# VGA Red channel (4 bits) - MSB to LSB
+# TODO: Update with actual R-2R DAC pins for red channel
+set_io vga_r[3] 47
+set_io vga_r[2] 45
+set_io vga_r[1] 2
+set_io vga_r[0] 4
+
+# VGA Green channel (4 bits) - MSB to LSB
+# TODO: Update with actual R-2R DAC pins for green channel
+set_io vga_g[3] 31
+set_io vga_g[2] 34
+set_io vga_g[1] 38
+set_io vga_g[0] 43
+
+# VGA Blue channel (4 bits) - MSB to LSB
+# TODO: Update with actual R-2R DAC pins for blue channel
+set_io vga_b[3] 48
+set_io vga_b[2] 46
+set_io vga_b[1] 44
+set_io vga_b[0] 3
+
+# VGA Sync signals
+set_io vga_hsync 20
+set_io vga_vsync 27
+
+# Probe points (duplicate sync signals for easier oscilloscope access)
+set_io vga_hsync_probe 42
+set_io vga_vsync_probe 36

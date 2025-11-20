@@ -1,0 +1,36 @@
+# Build artifacts
+*.bin
+*.asc
+*.json
+build/
+obj_dir/
+
+# Simulation outputs
+*.vcd
+*.fst
+*.out
+*.o
+*.vvp
+
+# Verilator temporary files
+*.d
+*.mk
+*.dat
+
+# Editor/IDE files
+.vscode/
+*.swp
+*.swo
+*~
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
