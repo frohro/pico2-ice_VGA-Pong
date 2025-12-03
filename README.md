@@ -86,6 +86,14 @@ The `firmware/` directory contains pre-built firmware files:
 
 **To update firmware files:** Download latest releases from the source repositories and replace the files in `firmware/`.
 
+## Hook Up
+Connect the Digilent VGA PMOD and pico2-ice like this:
+![Pong Hook Up](image.png)
+You should see this on the VGA monitor:
+![alt text](image-1.png)
+Dr. Gusman's LogicAnalyzer looks something like this:
+![alt text](image-2.png)
+
 ## 🎮 Game Specifications
 
 - **Ball**: 16×16 pixels, white color

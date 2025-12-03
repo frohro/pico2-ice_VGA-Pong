@@ -15,7 +15,11 @@ module top (
     output logic [3:0]  vga_g,        // 4-bit green channel
     output logic [3:0]  vga_b,        // 4-bit blue channel
     output logic        vga_hsync,    // Horizontal sync
-    output logic        vga_vsync     // Vertical sync
+    output logic        vga_vsync,    // Vertical sync
+    
+    // Debug probe outputs for LogicAnalyzer
+    output logic        vga_hsync_probe,  // Hsync probe (GPIO-accessible)
+    output logic        vga_vsync_probe   // Vsync probe (GPIO-accessible)
 );
 
     // Internal signals
@@ -104,5 +108,9 @@ module top (
             end
         end
     end
+
+    // Debug probe outputs - duplicate sync signals for LogicAnalyzer
+    assign vga_hsync_probe = vga_hsync;
+    assign vga_vsync_probe = vga_vsync;
 
 endmodule

@@ -35,9 +35,12 @@ set_io vga_b[2] 46
 set_io vga_b[1] 44
 set_io vga_b[0] 3
 
-# VGA Sync signals
-# Using GPIO-connected pins for LogicAnalyzer viewing
-# hsync: ICE_27 -> GPIO20 -> LA Channel 01
-# vsync: ICE_18 -> GPIO27 -> LA Channel 08
-set_io vga_hsync 27
-set_io vga_vsync 18
+# VGA Sync signals - Connected to VGA monitor
+set_io vga_hsync 42
+set_io vga_vsync 36
+
+# Debug probe outputs for LogicAnalyzer
+# hsync probe: ICE_27 -> GPIO20 -> LA Channel 01
+# vsync probe: ICE_18 -> GPIO27 -> LA Channel 08
+set_io vga_hsync_probe 27
+set_io vga_vsync_probe 18
