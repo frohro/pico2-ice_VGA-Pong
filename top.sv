@@ -15,11 +15,7 @@ module top (
     output logic [3:0]  vga_g,        // 4-bit green channel
     output logic [3:0]  vga_b,        // 4-bit blue channel
     output logic        vga_hsync,    // Horizontal sync
-    output logic        vga_vsync,    // Vertical sync
-    
-    // Probe points for easier oscilloscope access
-    output logic        vga_hsync_probe,
-    output logic        vga_vsync_probe
+    output logic        vga_vsync     // Vertical sync
 );
 
     // Internal signals
@@ -39,10 +35,6 @@ module top (
     
     // Convert active-low reset to active-high
     assign reset = ~reset_n;
-    
-    // Connect probe points to sync signals
-    assign vga_hsync_probe = vga_hsync;
-    assign vga_vsync_probe = vga_vsync;
 
     // Instantiate VGA timing generator
     vga_timing vga_timing_inst (

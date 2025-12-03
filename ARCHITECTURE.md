@@ -117,28 +117,32 @@
 - HSYNC: Negative (active low)
 - VSYNC: Negative (active low)
 
-## Pin Assignments (To Be Updated)
+## Pin Assignments
 
-| Signal      | FPGA Pin | Direction | Description                    |
-|-------------|----------|-----------|--------------------------------|
-| clk_25mhz   | TBD      | Input     | 25.175 MHz from RP2350B       |
-| reset_n     | TBD      | Input     | Active-low reset               |
-| vga_r[3]    | TBD      | Output    | Red MSB                        |
-| vga_r[2]    | TBD      | Output    | Red bit 2                      |
-| vga_r[1]    | TBD      | Output    | Red bit 1                      |
-| vga_r[0]    | TBD      | Output    | Red LSB                        |
-| vga_g[3]    | TBD      | Output    | Green MSB                      |
-| vga_g[2]    | TBD      | Output    | Green bit 2                    |
-| vga_g[1]    | TBD      | Output    | Green bit 1                    |
-| vga_g[0]    | TBD      | Output    | Green LSB                      |
-| vga_b[3]    | TBD      | Output    | Blue MSB                       |
-| vga_b[2]    | TBD      | Output    | Blue bit 2                     |
-| vga_b[1]    | TBD      | Output    | Blue bit 1                     |
-| vga_b[0]    | TBD      | Output    | Blue LSB                       |
-| vga_hsync   | TBD      | Output    | Horizontal sync (active low)   |
-| vga_vsync   | TBD      | Output    | Vertical sync (active low)     |
+| Signal      | FPGA Pin | ICE Pin     | RP2350B Pin | LA Channel | Direction | Description                    |
+|-------------|----------|-------------|-------------|------------|-----------|--------------------------------|
+| clk_25mhz   | 35       | ICE_35      | GPIO21      | 02         | Input     | 25 MHz clock from RP2350B     |
+| reset_n     | 10       | ICE_10      | -           | -          | Input     | Active-low reset               |
+| vga_r[3]    | 47       | ICE_47      | -           | -          | Output    | Red MSB                        |
+| vga_r[2]    | 45       | ICE_45      | -           | -          | Output    | Red bit 2                      |
+| vga_r[1]    | 2        | ICE_2       | -           | -          | Output    | Red bit 1                      |
+| vga_r[0]    | 4        | ICE_4       | -           | -          | Output    | Red LSB                        |
+| vga_g[3]    | 31       | ICE_31      | -           | -          | Output    | Green MSB                      |
+| vga_g[2]    | 34       | ICE_34      | GPIO35      | 16         | Output    | Green bit 2                    |
+| vga_g[1]    | 38       | ICE_38      | GPIO39      | 20         | Output    | Green bit 1                    |
+| vga_g[0]    | 43       | ICE_43      | GPIO43      | 24         | Output    | Green LSB                      |
+| vga_b[3]    | 48       | ICE_48      | -           | -          | Output    | Blue MSB                       |
+| vga_b[2]    | 46       | ICE_46      | -           | -          | Output    | Blue bit 2                     |
+| vga_b[1]    | 44       | ICE_44      | -           | -          | Output    | Blue bit 1                     |
+| vga_b[0]    | 3        | ICE_3       | -           | -          | Output    | Blue LSB                       |
+| vga_hsync   | 27       | ICE_27      | GPIO20      | 01         | Output    | Horizontal sync (active low)   |
+| vga_vsync   | 18       | ICE_18      | GPIO27      | 08         | Output    | Vertical sync (active low)     |
 
-**Note**: Update pins.pcf with actual pin numbers from pico2-ice schematic.
+### Debug Probe Points (Obsolete)
+
+**Note**: The probe points are no longer needed since hsync and vsync are now connected to GPIO-accessible pins that can be directly monitored on the LogicAnalyzer (Channels 01 and 08).
+
+**Note**: Probe points carry identical signals to main sync outputs, allowing waveform capture while monitor remains connected. LogicAnalyzer channels are based on the pico2-ice GPIO mapping (Channel = GPIO - 19).
 
 ## Resource Utilization
 
